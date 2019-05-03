@@ -59,7 +59,7 @@ type Status struct {
 	Sense                       string
 	LowTransferVoltage          float64
 	HighTransferVoltage         float64
-	AlarmDel                    time.Duration
+	AlarmDel                    string
 	BatteryVoltage              float64
 	LastTransfer                string
 	NumberTransfers             int
@@ -205,6 +205,8 @@ func (s *Status) parseKVString(k string, v string) bool {
 		s.SerialNumber = v
 	case keyFirmware:
 		s.Firmware = v
+	case keyAlarmDel:
+		s.AlarmDel = v
 	default:
 		return false
 	}
@@ -297,13 +299,6 @@ func (s *Status) parseKVDuration(k string, v string) (bool, error) {
 		s.MinimumTimeLeft, err = parse()
 	case keyMaxTime:
 		s.MaximumTime, err = parse()
-	case keyAlarmDel:
-		// No alarm delay configured.
-		if v == "No alarm" {
-			break
-		}
-
-		s.AlarmDel, err = parse()
 	case keyTOnBatt:
 		s.TimeOnBattery, err = parse()
 	case keyCumOnBatt:
